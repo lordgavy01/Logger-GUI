@@ -144,21 +144,33 @@ treeview = MyTreeview(frame,columns=arrlbHeader, show="headings",selectmode='bro
 # treeview.config(xscrollcommand=verticalbar.set)
 # verticalbar.config(command=treeview.yview)
 
-lst=["13:56:56","New Order","ab123","Warehouse","1422412",'Done']
-arrRows=[["13:56:56","New Order","ab123","Warehouse","1422412","Done"],["12:16:56","New Order","sdffds123","Sorting","232412","Done"]]
-for i in range(100):
-    new_list=lst.copy()
-    new_list[-1]+=str(i)
-    arrRows.append(new_list)
+
+arrRows=[]
+
+log_data=open('Warehouse.log','r')
+
+for line in log_data:
+    columns=line.split(',')
+    data=[]
+    for c in columns:
+        if len(data)==0:
+            c=c[11:]
+        if len(data)==1:
+            c=c[4:]
+        data.append(c)
+    arrRows.append(data)
+
+log_data.close()
 
 arrColAlignment = ["center", "center", "center", "center", "center", "center"]
 
 arrSortType = ["time", "name", "name", "name","num", "name"]
-arrColWidth = [150,150,150,150,150,400]
+arrColWidth = [100,100,280,150,150,400]
 for iCount in range(len(arrlbHeader)):
     strHdr = arrlbHeader[iCount]
     treeview.heading(strHdr, text=strHdr.title(), sort_by=arrSortType[iCount])
     treeview.column(arrlbHeader[iCount], width=arrColWidth[iCount], stretch=True, anchor=arrColAlignment[iCount])
+
 treeview.configure(height=100)
 treeview.pack()
 # treeview.place(x=50,y=250,relheight=80)
